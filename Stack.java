@@ -6,7 +6,6 @@ import java.util.EmptyStackException;
 /**
  * This is an implementation of a stack of Entry objects.
  * 
- * @author ZKAC269
  *
  */
 public class Stack {
@@ -52,7 +51,8 @@ public class Stack {
    * Removes the newest entry added from the stack(top).
    * 
    * @return the entry that was removed.
-   * @throws EmptyStackException thrown when the stack is empty and we try to remove an entry.
+   * @throws EmptyStackException thrown when the stack is empty and we try to
+   *                             remove an entry.
    */
   public Entry pop() {
     if (size == 0) {
@@ -68,7 +68,8 @@ public class Stack {
    * The newest item added to the stack.
    * 
    * @return a copy of the item at the top of the stack.
-   * @throws EmptyStackException thrown when the stack is empty and we try to get the top entry.
+   * @throws EmptyStackException thrown when the stack is empty and we try to get
+   *                             the top entry.
    */
   public Entry top() {
     if (size == 0) {
@@ -78,5 +79,3 @@ public class Stack {
   }
 
 }
-
-

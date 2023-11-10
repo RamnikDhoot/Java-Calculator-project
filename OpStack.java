@@ -5,10 +5,9 @@ import java.util.EmptyStackException;
 /**
  * This is a stack of operations to be a facade for the underlying stack class.
  * 
- * @author ZKAC269
  */
 public class OpStack {
-  
+
   Stack newStack;
 
   /**
@@ -17,7 +16,7 @@ public class OpStack {
   public OpStack() {
     newStack = new Stack();
   }
-  
+
   /**
    * Returns the size of the object by calling size on the stack object.
    * 
@@ -26,7 +25,7 @@ public class OpStack {
   public Integer size() {
     return newStack.size();
   }
-  
+
   /**
    * Adds the number to the top of the stack.
    * 
@@ -36,7 +35,7 @@ public class OpStack {
     newStack.push(test);
 
   }
-  
+
   /**
    * The newest item that was added to the stack.
    * 
@@ -45,9 +44,10 @@ public class OpStack {
   public Entry top() {
     return newStack.top();
   }
-  
+
   /**
-   * Removes the newest entry added from the stack. Catches any EmptyStackException thrown by the
+   * Removes the newest entry added from the stack. Catches any
+   * EmptyStackException thrown by the
    * stack class.
    * 
    * @return the entry that was removed.
@@ -62,7 +62,7 @@ public class OpStack {
     return popped;
 
   }
-  
+
   /**
    * Checks if the stack is empty.
    * 
