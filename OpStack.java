@@ -72,4 +72,24 @@ public class OpStack {
     return newStack.size() == 0;
   }
 
+  public void clear() {
+    while (!newStack.isEmpty()) {
+        newStack.pop();
+    }
+}
+
+public Entry peek() {
+    return newStack.top();
+}
+
+public Boolean contains(Entry entry) {
+    return false; 
+}
+
+public Entry[] toArray() {
+    // Convert the stack to an array
+    return new Entry[0]; 
+}
+
+
 }
