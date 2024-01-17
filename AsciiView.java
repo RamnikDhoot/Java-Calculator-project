@@ -1,78 +1,104 @@
 package calculator;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
 /**
  * This class is for the command line interface of the calculator.
- * It will output options to the user and explain how to use the calculator on the command line.
- * @author zkac269
- *
+ * It handles user inputs and displays options for using the calculator.
  */
 public class AsciiView implements ViewInterface {
-  private String question;
-  Observer calc = null;
-  Observer reset = null;
+    private String question;
+    private String answer = "";
+    private List<String> history = new ArrayList<>();
+    Observer calc = null;
+    Observer reset = null;
 
-  /**
-   *This outputs the menu for the user to read.
-   *It shows all the options the user has.
-   */
-  public void menu() {
-    Scanner s = new Scanner(System.in);
-    boolean finished = false;
-    help();
+    /**
+     * Outputs the menu and handles user inputs.
+     */
+    public void menu() {
+        Scanner s = new Scanner(System.in);
+        boolean finished = false;
+        help();
 
-    // The order of these checks is critical because hasNext blocks
-    while (!finished && s.hasNext()) {
-      String t = s.next();
-      switch (t.toUpperCase().charAt(0)) {
-        case 'C':
-          if (calc != null) {
-            calc.notifyObservers();
-          }
-          break;
-        case 'R':
-          if (reset != null) {
-            reset.notifyObservers();
-          }
-          break;
-        case '?':
-          question = t.substring(1);
-          System.out.println("Expression set to: " + question);
-          break;
-        case 'Q':
-          System.out.println("End");
-          finished = true;
-          break;
-        default:
-          help();
-      }
+        while (!finished && s.hasNext()) {
+            String input = s.nextLine().toUpperCase();
+
+            if (input.isEmpty()) continue;
+
+            char command = input.charAt(0);
+            switch (command) {
+                case 'C':
+                    if (calc != null) {
+                        calc.notifyObservers();
+                    }
+                    break;
+                case 'R':
+                    if (reset != null) {
+                        reset.notifyObservers();
+                    }
+                    break;
+                case '?':
+                    question = input.substring(1);
+                    System.out.println("Expression set to: " + question);
+                    break;
+                case 'H':
+                    showHistory();
+                    break;
+                case 'Q':
+                    System.out.println("Exiting calculator...");
+                    finished = true;
+                    break;
+                default:
+                    help();
+            }
+        }
+        s.close();
     }
-    s.close();
-  }
 
-  private void help() {
-    System.out.println("Use one of the following:");
-    System.out.println("  ?Expression - to set expression");
-    System.out.println("  C - to calculate");
-    System.out.println("  T - to reset the calculator");
-    System.out.println("  Q - to exit");
-  }
+    /**
+     * Displays the help menu with commands.
+     */
+    private void help() {
+        System.out.println("Use one of the following commands:");
+        System.out.println("  ?Expression - Set expression");
+        System.out.println("  C - Calculate expression");
+        System.out.println("  R - Reset the calculator");
+        System.out.println("  H - Show calculation history");
+        System.out.println("  Q - Exit the calculator");
+    }
 
-  /**
-   *Returns the expression that is input into the command line.
-   */
-  public String getExpression() {
-    return question;
-  }
+    /**
+     * Returns the expression input by the user.
+     */
+    public String getExpression() {
+        return question;
+    }
 
-  /**
-   *Gets the answer.
-   */
-  public void setAnswer(String a) {
-  }
+    /**
+     * Sets the answer and stores it in the history.
+     */
+    public void setAnswer(String a) {
+        this.answer = a;
+        history.add(question + " = " + a);
+    }
+
+    /**
+     * Displays the history of calculations.
+     */
+    private void showHistory() {
+        if (history.isEmpty()) {
+            System.out.println("No calculations yet.");
+            return;
+        }
+        System.out.println("Calculation History:");
+        history.forEach(System.out::println);
+    }
+
+    
 
   @Override
   public void addCalcObserver(Runnable f) { 
