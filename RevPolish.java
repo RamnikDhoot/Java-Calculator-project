@@ -3,61 +3,58 @@ package calculator;
 import java.util.Scanner;
 
 /**
- * Class which has all the logic for the calculator. It uses reverse polish notation.
- * 
- * @author zkac269
- *
+ * Class handling the logic for a calculator using Reverse Polish Notation.
  */
 public class RevPolish {
-  private NumStack list;
+    private NumStack list;
 
-  /**
-   * Takes a string expression and calculates it then returns the result. 
-   * The expression should be in reverse polish notation.
-   *
-   * @param str the expression to be calculated
-   * @return the result of the calculation
-   * @throws BadTypeException if a part of the string is the wrong type
-   */
-  public Float evaluate(String str) throws BadTypeException { // should return a float
-    list = new NumStack();
-    Scanner reader = new Scanner(str);
+    /**
+     * Evaluates a string expression in reverse polish notation.
+     *
+     * @param str The expression to be calculated.
+     * @return The result of the calculation.
+     * @throws BadTypeException If an invalid operation or number is encountered.
+     * @throws ArithmeticException If there's an attempt to divide by zero.
+     */
+    public Float evaluate(String str) throws BadTypeException {
+        list = new NumStack();
+        Scanner reader = new Scanner(str);
 
+        while (reader.hasNext()) {
+            if (reader.hasNextInt()) {
+                Entry next = new Entry(reader.nextInt());
+                list.push(next);
+            } else {
+                // Ensure there are enough operands before performing operations
+                if (list.size() < 2) {
+                    throw new BadTypeException("Not enough operands for the operation");
+                }
 
-    while (reader.hasNext()) {
-      if (reader.hasNextInt()) {
-        Entry next = new Entry(reader.nextInt());
-        list.push(next);
-      } else {
-        Float args1 = list.pop().getValue();
-        Float args2 = list.pop().getValue();
-        switch (reader.next()) {
-          case "+":
-            Entry answer = new Entry(args1 + args2);
-            list.push(answer);
-            break;
-          case "-":
-            Entry answer1 = new Entry(args1 - args2);
-            list.push(answer1);
-            break;
-          case "*":
-            Entry answer2 = new Entry(args1 * args2);
-            list.push(answer2);
-            break;
-          case "/":
-            Entry answer3 = new Entry(args1 / args2);
-            list.push(answer3);
-            break;
-          default:
-            continue;
+                Float args2 = list.pop().getValue();
+                Float args1 = list.pop().getValue();
+                String operator = reader.next();
+
+                Entry answer = switch (operator) {
+                    case "+" -> new Entry(args1 + args2);
+                    case "-" -> new Entry(args1 - args2);
+                    case "*" -> new Entry(args1 * args2);
+                    case "/" -> {
+                        if (args2 == 0) {
+                            throw new ArithmeticException("Division by zero is not allowed");
+                        }
+                        yield new Entry(args1 / args2);
+                    }
+                    default -> throw new BadTypeException("Invalid operator: " + operator);
+                };
+
+                list.push(answer);
+            }
         }
-      }
 
-
+        reader.close();
+        if (list.size() != 1) {
+            throw new BadTypeException("Invalid RPN expression");
+        }
+        return list.pop().getValue();
     }
-    reader.close();
-    return list.pop().getValue();
-    // The code for the reader was taken from an example by Dave in the Debug Lecture example.
-  }
 }
-
